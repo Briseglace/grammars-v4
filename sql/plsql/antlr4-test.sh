@@ -1,8 +1,6 @@
-set -x
+# set -x
 
 rm -r Generated-*
-
-dotnet trgen -t Java
 
 # dotnet new tool-manifest
 # dotnet tool install trcaret
@@ -33,9 +31,21 @@ dotnet trgen -t Java
 # dotnet tool install trxml
 # dotnet tool install trxml2
 
-cd Generated-Java
+dotnet trgen -t Java
 
+cd Generated-Java
 bash build.sh
 bash test.sh
+cd ..
+rm -r examples/*.sql.* examples/**/*.sql.*
+git restore examples/*.sql.*
+
+cd Generated-Java-more-examples
+bash build.sh
+cp ../more-examples-test.sh test.sh
+bash test.sh
+cd ..
+rm -r more-examples/*.sql.* more-examples/**/*.sql.*
+git restore more-examples/*.sql.*
 
 exit 0
