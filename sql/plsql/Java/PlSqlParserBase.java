@@ -11,6 +11,8 @@ public abstract class PlSqlParserBase extends Parser
     /** True if the last script_unit was PL/SQL (bare '/' requires preceding ';'). */
     private boolean _lastUnitWasPlsql = false;
 
+    private boolean _lastUnitWasStartCommand = false;
+
     public PlSqlParserBase(TokenStream input) {
         super(input);
     }
@@ -18,6 +20,7 @@ public abstract class PlSqlParserBase extends Parser
     @Override
     public void reset() {
         _lastUnitWasPlsql = false;
+        _lastUnitWasStartCommand = false;
         super.reset();
     }
 
@@ -25,6 +28,10 @@ public abstract class PlSqlParserBase extends Parser
     public void setLastUnitSql()   { _lastUnitWasPlsql = false; }
     public boolean isLastUnitSql()   { return !_lastUnitWasPlsql; }
     public boolean isLastUnitPlsql() { return _lastUnitWasPlsql; }
+
+    public void setLastUnitStartCommand()   { _lastUnitWasStartCommand = true; }
+    public void unsetLastUnitStartCommand()   { _lastUnitWasStartCommand = false; }
+    public boolean isLastUnitStartCommand() { return _lastUnitWasStartCommand; }
 
     /**
      * Parser-level predicate: distinguishes SOLIDUS as a SQL*Plus separator

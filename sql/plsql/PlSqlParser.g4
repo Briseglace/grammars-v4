@@ -50,9 +50,12 @@ script_unit
 // isSolidusSeparator() checks that '/' is on its own line (SQL*Plus separator
 // vs division operator).
 terminator
-    : SEMICOLON
-    | SEMICOLON {this.isSolidusSeparator()}? SOLIDUS
-    | {this.isLastUnitSql() && this.isSolidusSeparator()}? SOLIDUS
+    : (
+        SEMICOLON
+        | SEMICOLON {this.isSolidusSeparator()}? SOLIDUS
+        | {this.isLastUnitSql() && this.isSolidusSeparator()}? SOLIDUS
+        | {this.isLastUnitStartCommand()}? // SqlPlus `start_command` can ommit the terminator.
+    ) {this.unsetLastUnitStartCommand();}
     ;
 
 plsql_unit
@@ -7250,7 +7253,7 @@ sql_plus_command
     | SHOW (ERR | ERRORS)
     | whenever_command
     | timing_command
-    | start_command
+    | start_command {this.setLastUnitStartCommand();}
     | set_command
     | clear_command
     ;
